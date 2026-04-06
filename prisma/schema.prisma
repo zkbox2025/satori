@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                    String                 @id
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  name                  String?
+  email                 String                 @unique
+  avatarUrl             String?
+  bio                   String?
+  works                 Work[]
+  feedbacks             Feedback[]
+  generatedContents     GeneratedContent[]
+  workLikes             WorkLike[]
+  generatedContentLikes GeneratedContentLike[]
+}
+
+model Work {
+  id         String     @id @default(uuid())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  title      String
+  content    String
+  genre      String // slug形式 (例: "mental-health")
+  visibility Visibility @default(PRIVATE)
+  status     Status     @default(DRAFT)
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
+
+  feedbacks         Feedback?
+  generatedContents GeneratedContent[]
+  likes             WorkLike[]
+
+  @@index([userId])
+  @@index([userId, status, visibility])
+  @@index([status, visibility, createdAt])
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  workId    String
+  userId    String
+  work      Work     @relation(fields: [workId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([workId])
+  @@index([workId])
+}
+
+model GeneratedContent {
+  id            String                 @id @default(uuid())
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  generatedText String
+  visibility    Visibility             @default(PRIVATE)
+  style         ContentStyle
+  modelName     String
+  workId        String
+  userId        String
+  title         String
+  likes         GeneratedContentLike[]
+  work          Work                   @relation(fields: [workId], references: [id])
+  user          User                   @relation(fields: [userId], references: [id])
+
+  @@index([workId])
+  @@index([userId])
+  @@index([userId, visibility])
+  @@index([visibility, createdAt])
+}
+
+model WorkLike {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workId String
+  work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workId])
+  @@index([workId])
+  @@index([userId])
+}
+
+model GeneratedContentLike {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  generatedContentId String
+  generatedContent   GeneratedContent @relation(fields: [generatedContentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, generatedContentId])
+  @@index([generatedContentId])
+  @@index([userId])
+}
+
+enum ContentStyle {
+  POEM
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}
