@@ -1,12 +1,7 @@
-import { prisma } from "@/infrastructure/prisma/client";
+// app/page.tsx 
 
-export default async function Home() {
-  const count = await prisma.work.count();
+import { redirect } from "next/navigation";
 
-  return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold">satori</h1>
-      <p className="mt-4">Work count: {count}</p>
-    </main>
-  );
+export default function RootPage() {
+  redirect("/explore");
 }
