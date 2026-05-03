@@ -1,3 +1,5 @@
+//src/infrastructure/prisma/client.ts
+
 //設計図(schema.prisma)を書き換えるたびにPrismaClient(電話回線)が新しく作らずに今あるものを使うための設定
 //PrismaClientは、Prismaが提供するデータベースクライアントのクラスで、これを使ってデータベースに接続し、クエリ（命令）を実行します。
 import { PrismaClient } from "@prisma/client";
