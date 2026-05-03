@@ -46,35 +46,66 @@ model Feedback {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  content   String
-  workId    String
-  userId    String
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id])
+
+  content String @db.Text // SUCCESS時に本文。ERROR時は空文字でもOK運用
+
+  workId String
+  userId String
+  work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  prompt            String?   @db.Text
+  inputSnapshot     Json?
+  resultJson        Json?
+  modelName         String?
+  status            AiStatus @default(PENDING)
+  errorMessage      String?  @db.Text
+  tokensInput       Int?
+  tokensOutput      Int?
+  costUsdMicro      Int?
+  promptVersion     Int      @default(1)
+  providerRequestId String?
 
   @@unique([workId])
   @@index([workId])
+  @@index([status, updatedAt])
 }
 
 model GeneratedContent {
-  id            String                 @id @default(uuid())
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
-  generatedText String
-  visibility    Visibility             @default(PRIVATE)
-  style         ContentStyle
-  modelName     String
-  workId        String
-  userId        String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   title         String
-  likes         GeneratedContentLike[]
-  work          Work                   @relation(fields: [workId], references: [id], onDelete: Cascade)
-  user          User                   @relation(fields: [userId], references: [id])
+  generatedText String @db.Text
+
+  visibility Visibility   @default(PRIVATE)
+  style      ContentStyle
+
+  workId String
+  userId String
+  work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  likes GeneratedContentLike[]
+
+  prompt            String?   @db.Text
+  inputSnapshot     Json?
+  resultJson        Json?
+  modelName         String?
+  status            AiStatus @default(PENDING)
+  errorMessage      String?  @db.Text
+  tokensInput       Int?
+  tokensOutput      Int?
+  costUsdMicro      Int?
+  promptVersion     Int      @default(1)
+  providerRequestId String?
 
   @@index([workId])
   @@index([userId])
   @@index([userId, visibility])
   @@index([visibility, createdAt])
+  @@index([status, createdAt])
 }
 
 model WorkLike {
@@ -119,4 +150,10 @@ enum Visibility {
 enum Status {
   DRAFT
   PUBLISHED
+}
+
+enum AiStatus {
+  PENDING
+  SUCCESS
+  ERROR
 }
