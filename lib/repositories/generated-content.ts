@@ -5,24 +5,41 @@ import { prisma } from "@/src/infrastructure/prisma/client";//DB書き換えの�
 import type { Prisma } from "@prisma/client";//Prismaの型をインポート
 
 //結果から型定義する
-const generatedDetailInclude = {
-    user: {
+const generatedDetailSelect = {
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  title: true,
+  generatedText: true,
+  visibility: true,
+  style: true,
+  status: true,
+  errorMessage: true,
+  userId: true,
+  workId: true,
+  user: {
     select: {
       id: true,
       name: true,
       avatarUrl: true,
     },
   },
-  work: true,
+  work: {
+    select: {
+      id: true,
+      title: true,
+      genre: true,
+    },
+  },
   _count: {
     select: {
       likes: true,
     },
   },
-} satisfies Prisma.GeneratedContentInclude;
+} satisfies Prisma.GeneratedContentSelect;
 
 export type GeneratedDetailRecord = Prisma.GeneratedContentGetPayload<{
-  include: typeof generatedDetailInclude;
+  select: typeof generatedDetailSelect;
 }>;
 
 export type GeneratedDetailViewModel = GeneratedDetailRecord & {
@@ -31,7 +48,6 @@ export type GeneratedDetailViewModel = GeneratedDetailRecord & {
   isLiked: boolean;
   canLike: boolean;
 };
-
 function buildViewableGeneratedWhere(params: {
   generatedId: string;
   ownerId: string;
@@ -69,7 +85,7 @@ export async function findGeneratedDetailViewModel(params: {
           ownerId: userId,
           viewerId,
         }),
-        include: generatedDetailInclude,
+        select: generatedDetailSelect,
       });
 
       const likedGenerated = viewerId

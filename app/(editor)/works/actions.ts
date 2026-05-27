@@ -1,5 +1,5 @@
 //app/(editor)/works/actions.ts
-
+//記事の新規作成と更新のアクションを定義するファイル
 "use server";
 
 import { redirect, notFound } from "next/navigation";//別のページに遷移させる関数
@@ -71,13 +71,13 @@ export async function createWorkAction(//記事新規作成をする関数
 ): Promise<WorkActionState> {//最終的にはエラーメッセージか成功時はnull(何も表示しない)を返す
   const user = await getRequiredAuthUser();//ログイン情報を取得
 
-  const parsed = parseInput(formData);//入力値チェック&結果バリテーション関数に入力値を入れる
+  const parsed = parseInput(formData);//入力値チェック&結果バリデーション関数に入力値を入れる
 
   if (!parsed.success) {//結果がサクセスではないならエラーを表示して終了
     return { error: parsed.error };
   }
 
-  const { title, content, genre, visibility, submitType } = parsed.data;//バリテーション後（サクセス後）に必要な値をまとめて取り出す
+  const { title, content, genre, visibility, submitType } = parsed.data;//バリデーション後（サクセス後）に必要な値をまとめて取り出す
   const isDraft = submitType === "draft";//以下、isDraft="draft"として扱う
 
   const work = await prisma.work.create({//DBのworkテーブルに保存する
@@ -106,13 +106,13 @@ export async function updateWorkAction(
 ): Promise<WorkActionState> {//最終的にはエラーメッセージか成功時はnull(何も表示しない)を返す
   const user = await getRequiredAuthUser();//ログイン情報を取得
 
-  const parsed = parseInput(formData);//入力値チェック&結果バリテーション関数に入力値を入れる
+  const parsed = parseInput(formData);//入力値チェック&結果バリデーション関数に入力値を入れる
 
   if (!parsed.success) {//結果がサクセスではないならエラーを表示して終了
     return { error: parsed.error };
   }
 
-  const { title, content, genre, visibility, submitType } = parsed.data;//バリテーション後（サクセス後）に必要な値をまとめて取り出す
+  const { title, content, genre, visibility, submitType } = parsed.data;//バリデーション後（サクセス後）に必要な値をまとめて取り出す
   const isDraft = submitType === "draft";//以下、isDraft="draft"として扱う
 
   const existingWork = await prisma.work.findFirst({

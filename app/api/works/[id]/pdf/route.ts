@@ -1,5 +1,4 @@
 //app/api/works/[id]/pdf/route.ts
-
 //DBから特定の記事データを取り出し、PDFに変換して表示するAPI
 
 import React from "react";
@@ -36,7 +35,7 @@ export async function GET(_: Request, { params }: Props) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
-  const pdfElement = React.createElement(WorkPdfDocument, {//作品PDFのDocumentコンポーネント（react-pdf/rendererでPDFファイルが理解しやすい形に翻訳済み）にDBからとってきたデータを流し込む
+  const pdfElement = React.createElement(WorkPdfDocument, {//記事のPDFのDocumentコンポーネント（react-pdf/rendererでPDFファイルが理解しやすい形に翻訳済み）にDBからとってきたデータを流し込む
     title: work.title,
     genre: work.genre,
     visibility: work.visibility,

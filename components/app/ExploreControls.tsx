@@ -1,5 +1,5 @@
 //components/app/ExploreControls.tsx
-//exploreのページ(explore/page,explore/works,explore/generated)の検索欄とタブ切り替えの部分を担うコンポーネント。URLのクエリパラメータを更新して画面遷移することで、検索やタブ切り替えを実現している。
+//exploreのページ(explore/page,explore/works,explore/generated)の検索欄とタブ切り替え、戻るボタンの部分を担うコンポーネント。URLのクエリパラメータを更新して画面遷移することで、検索やタブ切り替えを実現している。
 
 "use client";
 

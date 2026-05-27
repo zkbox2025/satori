@@ -6,7 +6,7 @@ import { redirect, notFound } from "next/navigation";
 import { getRequiredAuthUser } from "@/lib/auth/get-auth-user";
 import { prisma } from "@/src/infrastructure/prisma/client";
 
-//記事削除アクション
+//記事一覧ページと詳細ページの削除アクション
 export async function deleteWorkAction(
   workId: string,
   redirectTo = "/works"
@@ -36,7 +36,7 @@ export async function deleteWorkAction(
   redirect(redirectTo);
 }
 
-//記事公開/非公開変更アクション
+//記事詳細ページの公開/非公開変更アクション
 export async function setWorkVisibilityAction(
   workId: string,
   visibility: "PUBLIC" | "PRIVATE"

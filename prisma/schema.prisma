@@ -19,6 +19,7 @@ model User {
   generatedContents     GeneratedContent[]
   workLikes             WorkLike[]
   generatedContentLikes GeneratedContentLike[]
+  aiRateLimitEvents AiRateLimitEvent[] 
 }
 
 model Work {
@@ -31,7 +32,7 @@ model Work {
   visibility Visibility @default(PRIVATE)
   status     Status     @default(DRAFT)
   userId     String
-  user       User       @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   feedback          Feedback?
   generatedContents GeneratedContent[]
@@ -52,7 +53,7 @@ model Feedback {
   workId String
   userId String
   work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   prompt            String?   @db.Text
   inputSnapshot     Json?
@@ -85,7 +86,7 @@ model GeneratedContent {
   workId String
   userId String
   work   Work   @relation(fields: [workId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   likes GeneratedContentLike[]
 
@@ -136,6 +137,17 @@ model GeneratedContentLike {
   @@unique([userId, generatedContentId])
   @@index([generatedContentId])
   @@index([userId])
+}
+
+model AiRateLimitEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, action, createdAt])
 }
 
 enum ContentStyle {

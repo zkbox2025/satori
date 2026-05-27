@@ -409,3 +409,64 @@ const handleSearchSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 
 【再発防止（Prevention）】
 ・React 19環境では、onChange には ChangeEvent、onSubmit には SubmitEvent というように、イベントごとに特化した型を明示的に指定する習慣をつける。
+
+
+###[2026-05-04] [generatedContent 作成時に SUCCESS / ERROR の2件が同時保存される]
+
+【影響範囲】
+発生環境：ローカル開発環境
+緊急度：中
+
+【症状】
+何が起きたか：
+作品生成を実行すると、generatedContents に 2件レコードが保存されることがある。
+1件は status=SUCCESS の正常レコード、もう1件は title="生成失敗" / status=ERROR の失敗レコードとして保存される。
+
+期待していた動作：
+成功時は SUCCESS レコードが1件だけ保存され、詳細ページへ遷移する。
+失敗時は ERROR レコードが1件だけ保存され、失敗内容を確認できるページへ遷移する。
+
+【再現手順】
+1. 自分の記事詳細ページを開く
+2. 「作品にする」ボタンを押す
+3. generatedContents テーブルを確認する
+
+【エラーメッセージ / ログ】
+・errorMessage に `NEXT_REDIRECT` が入ることがある
+・SUCCESS レコードと ERROR レコードが同時に作成される
+
+【切り分けメモ（どこが怪しいか）】
+・createGeneratedContentAction の try/catch 内に redirect() が入っている
+・Next.js の redirect() は通常の return ではなく、画面遷移のための特殊な例外のように動く
+・そのため、成功後の redirect() まで catch 節で拾っている可能性が高い
+
+【原因（Root Cause）】
+・createGeneratedContentAction の try ブロック内で SUCCESS レコード保存後に redirect() を実行していた
+・redirect() が投げる特殊な例外を catch してしまい、失敗処理側に流れて ERROR レコードも追加保存されていた
+
+【結論】
+・redirect() を try/catch の外に出すべきだった
+・成功/失敗のレコード作成と画面遷移を同じ try/catch に混ぜたことで、Next.js の redirect 制御と衝突した
+
+【解決策（Fix）】
+・try ブロックでは SUCCESS レコード作成のみ行う
+・catch ブロックでは ERROR レコード作成のみ行う
+・最後に redirect 先の id を使って try/catch の外で redirect() を1回だけ実行する
+
+【確認（動作検証）】
+・生成成功時に SUCCESS レコードが1件だけ保存されること
+・生成失敗時に ERROR レコードが1件だけ保存されること
+・SUCCESS 時に errorMessage が null であること
+・ERROR 時に errorMessage に失敗理由が保存されること
+・詳細ページへ正しく遷移すること
+
+【よくある落とし穴】
+・redirect() を普通の関数終了だと思って try/catch に入れてしまう
+・notFound() や redirect() は Next.js 側の特殊制御であることを忘れやすい
+・失敗ログ保存のための catch が、成功時の遷移まで巻き取ってしまうことがある
+
+【再発防止（Prevention）】
+・redirect() / notFound() は try/catch の外に出せるなら外に出す
+・「DB保存」と「画面遷移」を同じ try/catch に入れない
+・Server Action で失敗レコードを保存する場合は、成功パスと失敗パスを明確に分ける
+・生成系処理は SUCCESS / ERROR の保存件数をテストで確認する

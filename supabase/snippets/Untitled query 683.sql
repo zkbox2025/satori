@@ -25,12 +25,17 @@ drop policy if exists "generatedlike_select_own" on "GeneratedContentLike";
 drop policy if exists "generatedlike_insert_own" on "GeneratedContentLike";
 drop policy if exists "generatedlike_delete_own" on "GeneratedContentLike";
 
+drop policy if exists "airatelimit_select_own" on "AiRateLimitEvent";
+drop policy if exists "airatelimit_insert_own" on "AiRateLimitEvent";
+drop policy if exists "airatelimit_delete_own" on "AiRateLimitEvent";
+
 alter table "User" enable row level security;
 alter table "Work" enable row level security;
 alter table "Feedback" enable row level security;
 alter table "GeneratedContent" enable row level security;
 alter table "WorkLike" enable row level security;
 alter table "GeneratedContentLike" enable row level security;
+alter table "AiRateLimitEvent" enable row level security;
 
 create policy "user_select_own"
 on "User"
@@ -203,6 +208,27 @@ with check (
 
 create policy "generatedlike_delete_own"
 on "GeneratedContentLike"
+for delete
+using (
+  auth.uid()::text = "userId"
+);
+
+create policy "airatelimit_select_own"
+on "AiRateLimitEvent"
+for select
+using (
+  auth.uid()::text = "userId"
+);
+
+create policy "airatelimit_insert_own"
+on "AiRateLimitEvent"
+for insert
+with check (
+  auth.uid()::text = "userId"
+);
+
+create policy "airatelimit_delete_own"
+on "AiRateLimitEvent"
 for delete
 using (
   auth.uid()::text = "userId"

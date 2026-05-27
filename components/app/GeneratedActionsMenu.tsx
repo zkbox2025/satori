@@ -31,7 +31,7 @@ export default function GeneratedActionsMenu({
   const [pdfOpen, setPdfOpen] = useState(false);
   const [visibilityOpen, setVisibilityOpen] = useState(false);
   const [titleOpen, setTitleOpen] = useState(false);
-  const [title, setTitle] = useState(currentTitle);
+  const [title, setTitle] = useState(currentTitle);//タイトル編集のモーダルを開くときに、タイトルの初期値をcurrentTitleにセットするためのstate
   const [titleError, setTitleError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -169,7 +169,7 @@ export default function GeneratedActionsMenu({
                 キャンセル
               </button>
             </div>
-          
+          </BaseModal>
 
       <BaseModal
   open={titleOpen}
@@ -213,7 +213,6 @@ export default function GeneratedActionsMenu({
       保存
     </button>
   </div>
-</BaseModal>
       </BaseModal>
     </>
   );

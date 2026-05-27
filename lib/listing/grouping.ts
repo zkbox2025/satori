@@ -13,7 +13,7 @@ export function groupByGenre<T extends { genre: string }>(items: T[]) {//ジャ�
 }
 
 //グループ化したあと、ジャンル見出しを五十音順に並べる関数
-export function getSortedGenreEntries<T extends { genre: string }>(
+export function getSortedGenreEntries<T extends { genre: string }>(//ジャンルという名前のキーがある文字列ならなんでも引数にできる
   items: T[]
 ): GenreGroupedEntry<T>[] {
   const grouped = groupByGenre(items);//ジャンルごとに並び替える関数にデータを入れる

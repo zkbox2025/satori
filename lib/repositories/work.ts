@@ -14,9 +14,17 @@ const workDetailInclude = {//DBからのInclude（追加情報）の型定義
       avatarUrl: true,
     },
   },
-  feedback: true,
-  _count: {
-    select: {
+ feedback: {
+  select: {
+    id: true,
+    content: true,
+    status: true,
+    errorMessage: true,
+    updatedAt: true,
+  },
+},
+_count: {
+  select: {
       likes: true,
     },
   },
@@ -37,7 +45,7 @@ export type WorkDetailViewModel = WorkDetailRecord & {//findWorkDetailViewModel�
 //❷どんな検索条件でDBから記事を探すかのメモ。findWorkDetailViewModel（DBから記事詳細ページの情報を取ってくる関数）で用いられる（同じファイル内で使われてるためエクスポートはなし）
 function buildViewableWorkWhere(params: {
   workId: string;
-  ownerId: string;
+  ownerId: string;//（userIdのこと）
   viewerId?: string | null;
 }) {
   const { workId, ownerId, viewerId } = params;

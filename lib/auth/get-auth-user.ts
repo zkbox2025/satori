@@ -21,7 +21,7 @@ export async function getRequiredAuthUser() {
 }
 
 //公開詳細ページなど、ログインしているかどうかで閲覧ページが変わるところで使用する関数
-// ログインしている場合はユーザー情報を返し、していない場合はnullを返す
+// ログインしている場合はユーザー情報を返し、していない場合はnullを返す（指定していなければ自動でnullを返す）
 export async function getOptionalAuthUser() {
   const supabase = await createClient();
 

@@ -1,4 +1,5 @@
 //components/ui/BaseModal.tsx
+//外側だけ共通化したモーダル。
 //モーダルの外枠の共通化ファイル。BaseModalをConfirmModalが呼び出す形になっている。
 
 "use client";

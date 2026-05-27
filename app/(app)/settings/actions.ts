@@ -55,7 +55,7 @@ export async function updateAvatarAction(
 
   //他の人のファイルと名前が被らないように以下の処理をする
   const fileExt = file.name.split(".").pop() ?? "jpg";//拡張子（jpgなど）を抜き出す（split(".")でファイル名をバラバラにし、.pop()で一番最後を抜き出す。?? "jpg"で拡張子が取れなかったらとりあえずjpgにする）
-  const filePath = `${user.id}/${Date.now()}.${fileExt}`;//画像の保存場所を作成する（DBに全て保存するとパンクするのでDBが取りに行く場所（ファイルパス）を作成し、ファイルパスのみDBに保存する。実際の画像はファイル置き場（supabaseのストレージのバケット）にある）
+  const filePath = `${user.id}/${Date.now()}.${fileExt}`;//画像の保存場所を作成する（DBに全て画像を保存するとパンクするのでストレージ（画像本体が保存されてある場所）へ取りに行く住所（ファイルパス）を作成し、ファイルパスのみDBに保存する。実際の画像はファイル置き場（supabaseのストレージのバケット）にある）
 
   const { error: uploadError } = await supabase.storage//supabaseのストレージの"avatars"というバケットに作成するfilePathで画像本体を保存する（もし同じファイルがすでにあったらipsert(上書き)する）
     .from("avatars")
