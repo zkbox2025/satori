@@ -1,5 +1,6 @@
 //components/app/ListControls.tsx
-//検索箱、戻るボタン、プルダウンのコンポーネント関数
+//検索およびプルダウン選択でURLを作り遷移させるファイル
+//ユーザー操作前はただの検索箱、戻るボタン、プルダウンのコンポーネント関数
 
 "use client";
 
@@ -50,9 +51,9 @@ export default function ListControls({
     visibility?: VisibilityOption;
   }) => {
     const nextQ = next.q ?? query;
-    const nextSort =
+    const nextSort =//第一候補：新しく変更された値、第二候補：URLnの値、第三候補：初期値
       next.sort ?? (searchParams.get("sort") as SortOption | null) ?? initialSort;
-    const nextVisibility =
+    const nextVisibility =//第一候補：新しく変更された値、第二候補：URLの値、第三候補：初期値
       next.visibility ??
       (searchParams.get("visibility") as VisibilityOption | null) ??
       initialVisibility;
@@ -126,7 +127,7 @@ export default function ListControls({
           onChange={(e) => handleSortChange(e.target.value as SortOption)}
           className="rounded-md border px-3 py-2"
         >
-          {sortOptions.map((option) => (//一つのデータずつ値(value)をつけ、labelの通りに表示する
+          {sortOptions.map((option) => (//表示用のHTMLにマッピングするついでに一つのデータずつ値(value)およびキーをつけ、labelの通りに表示する。これでキーによりわかりやすくする
             <option key={option.value} value={option.value}>
               {option.label}
             </option>

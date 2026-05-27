@@ -1,5 +1,6 @@
 //components/app/SearchBackControls.tsx
-//戻るボタンと検索ボタンをまとめたファイル
+//いいね記事/作品一覧、下書き一覧の検索箱のユーザー操作によってクエリ付きURLを作成するファイル
+//ユーザー操作なしの場合は、戻るボタンと検索ボタンをまとめたUIファイルとなる
 
 "use client";
 
@@ -28,26 +29,26 @@ export default function SearchBackControls({
 
   const [query, setQuery] = useState(initialQuery);
 
-  const currentParams = useMemo(
+  const currentParams = useMemo(//サーチパラムス（?以降）を取得する
     () => new URLSearchParams(searchParams.toString()),
     [searchParams]
   );
 
   const pushWithQuery = (nextQuery: string) => {
-    const params = new URLSearchParams(currentParams);
+    const params = new URLSearchParams(currentParams);//取得したサーチパラムスをコピーする
 
-    if (nextQuery.trim()) {
-      params.set("q", nextQuery.trim());
+    if (nextQuery.trim()) {//qの前後を削除して
+      params.set("q", nextQuery.trim());//もしqがあれば?q=をセットする
     } else {
-      params.delete("q");
+      params.delete("q");//空白なら消す
     }
 
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    const queryString = params.toString();//取り出したqをURL用の文字列に変換する
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);//クエリがあればクエリ付きのURLに遷移する。なければパスネームのみのURLに遷移する
   };
 
-  const handleSearchSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSearchSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {//結果の表示のための処理
+    e.preventDefault();//スムーズに検索結果を表示するためにページ遷移を防止する
     pushWithQuery(query);
   };
 

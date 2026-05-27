@@ -1,4 +1,5 @@
 //components/header/logout-button.tsx
+//ログアウトボタンのコンポーネント。supabaseのブラウザ用クライアントを使ってユーザー操作（ログアウト）をする。ログアウトしたらメインページ（/explore）へ遷移する。
 "use client";
 
 import { useRouter } from "next/navigation";//ページ遷移するための関数をインポート

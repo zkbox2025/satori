@@ -1,5 +1,4 @@
 //app/api/generated/[id]/pdf/route.ts
-
 //DBから特定の作品データを取り出し、PDFに変換して表示するAPI
 
 import React from "react";//webの仕組みを作る基本ツール
@@ -13,9 +12,16 @@ type Props = {//URLからgeneratedidを抜き出して引数として使う
   params: Promise<{ id: string }>;
 };
 
+
+//PDF出力ボタンが押された時にwindow.open( `/api/generated/${generatedId}/pdf`,"_blank","noopener,noreferrer");が実行される
+//ブラウザが新しいタブで/api/generated/abc123/pdfを開く（と当時にこの行為自体が、ブラウザがサーバーに対してGET /api/generated/abc123/pdfのリクエストを送ることとなる）
+//Next.jsがapp/api/generated/[id]/pdf/route.tsを見つけてGET関数を実行する
+
 export async function GET(_: Request, { params }: Props) {//URLを開いたときに動く関数
   const { id } = await params;//generatedidを取り出したら次に行く
 
+  //以下、getRequiredAuthUserなら未ログイン時にログインページにリダイレクトされるため、それを使わずに
+  //４０１のエラーを表示できる形式で書いている（PDF表示のAPIなので、未ログインならエラーを返すだけで十分と判断したため）
   const supabase = await createClient();
   const {
     data: { user },

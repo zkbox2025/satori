@@ -73,7 +73,7 @@ export default function UserProfilePage({//マイページで使うメインコ�
 
     if (!normalizedKeyword) return base;//検索キーワードがなければそのまま表示
 
-    return base.filter((item) =>//タイトルとジャンルを合体させた文字列の中に検索ワードが含まれているかをチェックし、どちらかのキーワードに入っていれば表示
+    return base.filter((item) =>//すでに取得済みの記事作品の中のタイトルとジャンルを合体させた文字列の中に検索ワードが含まれているかをチェックし、どちらかのキーワードに入っていれば表示
       `${item.title} ${item.genre}`.toLowerCase().includes(normalizedKeyword)
     );
   }, [tab, works, generatedContents, normalizedKeyword, user.id]);//useMemoを発動してこの中のどれか一つでも変わったときだけリストを作り直すこと

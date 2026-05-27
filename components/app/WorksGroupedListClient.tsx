@@ -1,5 +1,5 @@
 //components/app/WorksGroupedListClient.tsx
-//自分の記事一覧ページの記事の表示部分をGenreGroupedListから切り出して、「・・・」と「いいね数、ジャンル名、生成日（ContentMetaRow）」を入れられるようにした窓口コンポーネント
+//自分の記事一覧ページの記事の表示部分をGenreGroupedListから切り出して、「・・・」と「いいね数、ジャンル名、生成日（ContentMetaRow）」を入れられるようにした窓口コンポーネント（GenreGroupedListを他のページで使える凡庸性の高いファイルにするため）
 
 "use client";
 

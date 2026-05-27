@@ -1,4 +1,5 @@
 //lib/repositories/user.ts
+//DBからユーザー情報やマイページで使う記事/作品情報を取得/更新する関数
 
 import { prisma } from "@/src/infrastructure/prisma/client";//DBからデータを取得する際の電話線
 import { notFound } from "next/navigation";//404を表示するための道具

@@ -122,7 +122,7 @@ export default function ExploreHomeSections({
       <section className="space-y-8">
         <h2 className="text-xl font-semibold">{genreLabel}</h2>
 
-        {genreEntries.map(([genre, items]) => {
+        {genreEntries.map(([genre, items]) => {//HTMLに変換するためのマッピング
           const limit = getGenreLimit(genreLimits, genre, 5);
 
           //ジャンル別表示件数を計算するために{}で囲む必要があり、{}を使うとリターンを挟む必要がある。

@@ -1,4 +1,5 @@
 //components/ui/ConfirmModal.tsx
+//BaseModalを使った「確認専用」のモーダル
 //・・・を押してプルダウンで選択した後のモーダルの共通コンポーネント（「タイトル」「クリック」「キャンセル」）
 "use client";
 
